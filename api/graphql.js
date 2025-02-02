@@ -1,24 +1,11 @@
-const { ApolloServer, gql } = require('apollo-server-micro');
-const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const User = require('../models/User');
-const Customer = require('../models/Customer');
-const connectDB = require('../config/db');
+import { ApolloServer } from "apollo-server-micro";
+import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import User from "../../models/User";
+import Customer from "../../models/Customer";
+import connectDB from "../../config/db";
 
-// Add CORS headers for all routes
-const handleCORS = (req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
-  // Handle preflight request (OPTIONS)
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  
-  next();
-};
 
 // Define GraphQL Schema
 const typeDefs = gql`
@@ -122,33 +109,32 @@ const resolvers = {
   },
 };
 
-// Create Apollo Server
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => {
-    const token = req.headers.authorization || '';
+    const token = req.headers.authorization || "";
     if (token) {
       try {
-        const decoded = jwt.verify(token.replace('Bearer ', ''), process.env.JWT_SECRET);
+        const decoded = jwt.verify(token.replace("Bearer ", ""), process.env.JWT_SECRET);
         return { userId: new mongoose.Types.ObjectId(decoded.userId) };
       } catch (err) {
-        console.error('Token verification failed:', err);
+        console.error("Token verification failed:", err);
       }
     }
     return {};
   },
-  cors: false, // Disable default CORS, since we're handling it manually
 });
 
-// Handle Serverless Function Requests with custom CORS handler
-const handler = async (req, res) => {
-  handleCORS(req, res, async () => {
-    await server.start();
-    return server.createHandler({ path: '/api/graphql' })(req, res);
-  });
-};
+const startServer = server.start();
 
-// Connect to DB and export the handler for Vercel
-connectDB();
-module.exports = handler;
+export default async function handler(req, res) {
+  await startServer;
+  await server.createHandler({ path: "/api/graphql" })(req, res);
+}
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
