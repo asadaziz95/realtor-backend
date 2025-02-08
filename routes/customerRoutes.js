@@ -37,4 +37,32 @@ router.post("/", authMiddleware, async (req, res) => {
   res.status(201).json(customer);
 });
 
+// Update customer
+router.put("/:customerId", authMiddleware, async (req, res) => {
+  const { customerName, customerContactNumber, totalDownPayment, totalPayment, commission, dealerName } = req.body;
+
+  try {
+    const customer = await Customer.findOneAndUpdate(
+      { customerId: req.params.customerId },
+      {
+        customerName,
+        customerContactNumber,
+        totalDownPayment,
+        totalPayment,
+        commission,
+        dealerName,
+      },
+      { new: true }
+    );
+
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    res.json(customer);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
 export default router;
