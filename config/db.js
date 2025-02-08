@@ -2,11 +2,16 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 dotenv.config();
-console.log('process.env.MONGO_URI',process.env.MONGO_URI);
 
+const mongoURI = process.env.MONGODB_URI;
+
+if (!mongoURI) {
+  console.error('MongoDB connection URI is missing. Please set the MONGODB_URI environment variable.');
+  process.exit(1);
+}
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb+srv://asadazizjs:ZEZjz8EhJVMsbSv@cluster0.9fkd1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+    await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
