@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const mongoURI = process.env.MONGODB_URI;
+const mongoURI = process.env.MONGO_URI;
 
 if (!mongoURI) {
   console.error('MongoDB connection URI is missing. Please set the MONGODB_URI environment variable.');
