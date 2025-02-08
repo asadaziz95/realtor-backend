@@ -65,4 +65,19 @@ router.put("/:customerId", authMiddleware, async (req, res) => {
   }
 });
 
+// Delete customer
+router.delete("/:customerId", authMiddleware, async (req, res) => {
+  try {
+    const customer = await Customer.findOneAndDelete({ customerId: req.params.customerId });
+
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    res.json({ message: "Customer deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
 export default router;
