@@ -40,7 +40,7 @@ router.post("/", authMiddleware, async (req, res) => {
 
 // Update customer
 router.put("/:customerId", authMiddleware, async (req, res) => {
-  const { customerName, customerContactNumber, totalDownPayment, totalPayment, commission, dealerName } = req.body;
+  const { customerName, customerContactNumber, totalDownPayment, totalPayment, commission, dealerName,plotNumber } = req.body;
 
   try {
     const customer = await Customer.findOneAndUpdate(
