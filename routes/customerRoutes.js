@@ -19,7 +19,7 @@ router.get("/:customerId", authMiddleware, async (req, res) => {
 
 // Create customer
 router.post("/", authMiddleware, async (req, res) => {
-  const { customerName, customerContactNumber, totalDownPayment, totalPayment, commission, dealerName } = req.body;
+  const { customerName, customerContactNumber, totalDownPayment, totalPayment, commission, dealerName,plotNumber } = req.body;
   const customerId = `CUST${Date.now()}`; // Generate unique customerId
 
   const customer = new Customer({
