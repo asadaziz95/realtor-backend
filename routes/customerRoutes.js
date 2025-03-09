@@ -30,6 +30,7 @@ router.post("/", authMiddleware, async (req, res) => {
     totalPayment,
     commission,
     dealerName,
+    plotNumber,
     createdBy: req.user.userId,
   });
 
@@ -51,6 +52,7 @@ router.put("/:customerId", authMiddleware, async (req, res) => {
         totalPayment,
         commission,
         dealerName,
+        plotNumber,
       },
       { new: true }
     );

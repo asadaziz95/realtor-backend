@@ -9,6 +9,7 @@ const CustomerSchema = new mongoose.Schema({
   totalPayment: Number,
   commission: Number,
   dealerName: String,
+  plotNumber: String,
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 
